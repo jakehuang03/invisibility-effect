@@ -85,7 +85,6 @@ def camera_with_invisibility_cloak():
             print("Exiting...")
             break
 
-    # Release the camera and close all OpenCV windows
     cap.release()
     cv2.destroyAllWindows()
 
