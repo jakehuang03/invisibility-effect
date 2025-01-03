@@ -2,13 +2,15 @@ import cv2
 import numpy as np
 
 selected_color_hsv = None
+selected_color_text = "No color selected"
 
 def mouse_callback(event, x, y, flags, frame):
-    global selected_color_hsv
+    global selected_color_hsv, selected_color_text
     if event == cv2.EVENT_LBUTTONDOWN:
         bgr_color = frame[y, x]
         hsv_color = cv2.cvtColor(np.uint8([[bgr_color]]), cv2.COLOR_BGR2HSV)
         selected_color_hsv = tuple(int(c) for c in hsv_color[0][0])
+        selected_color_text = f"Color selected: {selected_color_hsv}"  
         print(f"hsv: {selected_color_hsv}")
 def camera_with_invisibility_cloak():
     cap = cv2.VideoCapture(0)
@@ -71,7 +73,8 @@ def camera_with_invisibility_cloak():
             if selected_color_hsv is not None:
                 selected_color_bgr = cv2.cvtColor(np.uint8([[selected_color_hsv]]), cv2.COLOR_HSV2BGR)[0][0]
                 selected_color_bgr = tuple(int(c) for c in selected_color_bgr)
-                cv2.rectangle(frame, (10, 10), (160, 60), selected_color_bgr, -1)
+                cv2.rectangle(frame, (10, 60), (160, 120), selected_color_bgr, -1)
+            cv2.putText(frame, selected_color_text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2)
             cv2.imshow('Camera Feed', frame)
 
         key = cv2.waitKey(1) & 0xFF
